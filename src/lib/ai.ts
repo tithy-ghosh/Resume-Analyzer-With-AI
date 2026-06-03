@@ -38,11 +38,17 @@ ${selfDescription}
 Job Description:
 ${jobDescription.slice(0, 2000)}
 
-Return this exact JSON structure:
+Return this exact JSON structure. IMPORTANT: You must return AT LEAST 10 technical questions and 8 behavioral questions. Make the questions highly specific to the job description's tech stack, responsibilities, and requirements — not generic questions.
+
 {
-  "title": "job title from job description",
-  "matchScore": 75,
+  "title": "exact job title from job description",
+  "matchScore": 72,
   "technicalQuestions": [
+    { "question": "Specific technical question based on job tech stack", "intention": "What the interviewer is testing for", "answer": "A detailed 3-5 sentence answer guide explaining exactly how to answer this, what to include, what frameworks/concepts to mention, and any red flags to avoid" },
+    { "question": "...", "intention": "...", "answer": "..." },
+    { "question": "...", "intention": "...", "answer": "..." },
+    { "question": "...", "intention": "...", "answer": "..." },
+    { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
@@ -50,27 +56,32 @@ Return this exact JSON structure:
     { "question": "...", "intention": "...", "answer": "..." }
   ],
   "behavioralQuestions": [
+    { "question": "Behavioral question relevant to the role and company type", "intention": "What trait or experience the interviewer is evaluating", "answer": "A detailed STAR-method answer guide: what Situation to describe, what Task to highlight, what Action demonstrates the skill, and what Result to share. Include specific tips for this role." },
+    { "question": "...", "intention": "...", "answer": "..." },
+    { "question": "...", "intention": "...", "answer": "..." },
+    { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." },
     { "question": "...", "intention": "...", "answer": "..." }
   ],
   "skillGaps": [
-    { "skill": "...", "severity": "high" }
+    { "skill": "Specific missing skill from job description not found in resume", "severity": "high" },
+    { "skill": "...", "severity": "medium" },
+    { "skill": "...", "severity": "low" }
   ],
   "preparationPlan": [
-    { "day": 1, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 2, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 3, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 4, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 5, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 6, "focus": "...", "tasks": ["...", "..."] },
-    { "day": 7, "focus": "...", "tasks": ["...", "..."] }
+    { "day": 1, "focus": "Day focus area", "tasks": ["Specific actionable task", "Another task", "Third task"] },
+    { "day": 2, "focus": "...", "tasks": ["...", "...", "..."] },
+    { "day": 3, "focus": "...", "tasks": ["...", "...", "..."] },
+    { "day": 4, "focus": "...", "tasks": ["...", "...", "..."] },
+    { "day": 5, "focus": "...", "tasks": ["...", "...", "..."] },
+    { "day": 6, "focus": "...", "tasks": ["...", "...", "..."] },
+    { "day": 7, "focus": "...", "tasks": ["...", "...", "..."] }
   ]
 }
 `
 
-  // Retry up to 5 times for 503 temporary overload
   for (let attempt = 1; attempt <= 5; attempt++) {
     try {
       console.log(`🤖 Attempt ${attempt}...`)
@@ -93,6 +104,8 @@ Return this exact JSON structure:
 
       const parsed = JSON.parse(clean)
       console.log("✅ Success! Title:", parsed.title)
+      console.log("  Technical questions:", parsed.technicalQuestions?.length)
+      console.log("  Behavioral questions:", parsed.behavioralQuestions?.length)
 
       return parsed
 
@@ -101,7 +114,7 @@ Return this exact JSON structure:
       console.log(`⚠️ Attempt ${attempt} failed:`, e?.status)
 
       if (e?.status === 503 && attempt < 5) {
-        const wait = attempt * 4000 // 4s, 8s, 12s, 16s
+        const wait = attempt * 4000
         console.log(`⏳ Waiting ${wait / 1000}s before retry...`)
         await new Promise(res => setTimeout(res, wait))
       } else {

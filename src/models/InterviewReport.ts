@@ -1,6 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import { required } from "zod/mini";
-
 
 const technicalQuestionSchema = new Schema({
     question: String,
@@ -17,25 +15,25 @@ const behavioralQuestionSchema = new Schema({
 const skillGapSchema = new Schema({
     skill: String,
     severity: { type: String, enum: ["low", "medium", "high"] }
-}, {_id: false})
+}, { _id: false })
 
-
-const preparationPlanSchema = new Schema ({
+const preparationPlanSchema = new Schema({
     day: Number,
     focus: String,
     tasks: [String]
-})
+}, { _id: false })
 
 const interviewReportSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: "User" },
     title: { type: String, required: true },
     jobDescription: String,
+    selfDescription: String,
     resume: String,
     matchScore: { type: Number, min: 0, max: 100 },
-    technicalQuestions : [ technicalQuestionSchema ],
-    behaviroalQuestion : [ behavioralQuestionSchema ],
-    skillGaps: [ skillGapSchema ],
-    preparationPlan: [ preparationPlanSchema ],
+    technicalQuestions: [technicalQuestionSchema],
+    behavioralQuestions: [behavioralQuestionSchema],
+    skillGaps: [skillGapSchema],
+    preparationPlan: [preparationPlanSchema],
 }, { timestamps: true })
 
 const InterviewReportModel = mongoose.models.InterviewReport || mongoose.model("InterviewReport", interviewReportSchema)
