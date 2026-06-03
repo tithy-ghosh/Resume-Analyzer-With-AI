@@ -8,6 +8,7 @@ import ScoreRing from "@/components/ScoreRing"
 import MatchBadge from "@/components/MatchBadge"
 import SectionTitle from "@/components/SectionTitle"
 import QuestionCard from "@/components/QuestionCard"
+import ATSResumeButton from "@/components/ATSResumeButton"
 
 export default async function ReportPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -159,9 +160,14 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
                 </ul>
               </div>
             ))}
+
           </div>
         </div>
-
+        {/* ATS Resume Generator */}
+        <div>
+          <SectionTitle>ATS-optimized resume</SectionTitle>
+          <ATSResumeButton reportId={id} />
+        </div>
       </div>
     </PageLayout>
   )

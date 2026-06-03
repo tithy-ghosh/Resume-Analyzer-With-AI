@@ -1,25 +1,24 @@
-import { auth } from "./auth";
-import { NextResponse } from "next/server";
+import { auth } from "./auth"
+import { NextResponse } from "next/server"
 
 export default auth((req) => {
-    const isLoogedIn = !!req.auth
-    const isAuthPage = req.nextUrl.pathname.startsWith("/login") || req.nextUrl.pathname.startsWith("/register")
+  const isLoggedIn = !!req.auth
+  const { pathname } = req.nextUrl
 
-    // If not logged in and trying to access protected page -> redirect
+  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/register")
+  const isPublic = pathname === "/" || isAuthPage
 
-    if(!isLoogedIn && !isAuthPage){
-        return NextResponse.redirect(new URL("/login", req.url))
-    }
+  if (!isLoggedIn && !isPublic) {
+    return NextResponse.redirect(new URL("/login", req.url))
+  }
 
-    // If logged in and trying to access login/access login/register -> redirect to dashboard
+  if (isLoggedIn && isAuthPage) {
+    return NextResponse.redirect(new URL("/dashboard", req.url))
+  }
 
-    if(isLoogedIn && isAuthPage){
-        return NextResponse.redirect(new URL("/dashboard", req.url))
-    
-    }
-    return NextResponse.next()
+  return NextResponse.next()
 })
 
 export const config = {
-    matcher: ["/", "/dashboard/:path*", "/analyze/:path*", "/login", "/register"],
+  matcher: ["/", "/dashboard/:path*", "/analyze/:path*", "/reports/:path*", "/login", "/register"],
 }
