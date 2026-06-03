@@ -13,6 +13,72 @@ export interface InterviewReportResult {
   preparationPlan: { day: number; focus: string; tasks: string[] }[]
 }
 
+type InterviewQuestion = { question: string; intention: string; answer: string }
+
+function fallbackQuestions(jobDescription: string, type: "technical" | "behavioral"): InterviewQuestion[] {
+  const normalized = jobDescription.toLowerCase()
+  const technicalTopics = [
+    ["react", "React state, hooks, component boundaries, performance, and accessibility"],
+    ["next", "Next.js routing, server/client rendering, caching, and API routes"],
+    ["node", "Node.js API structure, async behavior, validation, and error handling"],
+    ["mongodb", "MongoDB schema design, indexing, aggregation, and data consistency"],
+    ["sql", "SQL data modeling, indexing, joins, transactions, and query performance"],
+    ["python", "Python service design, testing, package choices, and data processing"],
+    ["aws", "AWS deployment, security, monitoring, scaling, and cost control"],
+    ["docker", "Docker image design, environments, local development, and deployment"],
+    ["api", "API contracts, authentication, authorization, rate limits, and observability"],
+    ["test", "testing strategy, edge cases, integration tests, and CI feedback"],
+    ["security", "security risks, data protection, input validation, and least privilege"],
+    ["performance", "performance bottlenecks, measurement, caching, and profiling"],
+  ]
+
+  if (type === "technical") {
+    const matched = technicalTopics
+      .filter(([keyword]) => normalized.includes(keyword))
+      .map(([, topic]) => topic)
+    const topics = Array.from(new Set([
+      ...matched,
+      ...technicalTopics.map(([, topic]) => topic),
+    ]))
+
+    return topics.map((topic) => ({
+      question: `How would you handle ${topic} for this role?`,
+      intention: "The interviewer is testing whether you can translate the job description into practical engineering decisions.",
+      answer: "Start with the business goal and constraints, explain your technical approach, name tradeoffs, and describe how you would test, monitor, and improve the solution. Tie your answer to a real project whenever possible.",
+    }))
+  }
+
+  return [
+    ["Tell me about a time you owned a difficult delivery from ambiguity to release.", "ownership, prioritization, and communication"],
+    ["Describe a time you had to learn a job-critical tool or domain quickly.", "learning speed and adaptability"],
+    ["Give an example of handling disagreement during a technical or product decision.", "collaboration and judgment"],
+    ["Tell me about a mistake or production issue you helped fix.", "accountability and debugging habits"],
+    ["How do you prioritize when several urgent tasks compete for your attention?", "tradeoff thinking and stakeholder communication"],
+    ["Tell me about a time you improved quality, reliability, or maintainability.", "long-term engineering standards"],
+    ["Describe a time expectations changed late in a project.", "adaptability and expectation management"],
+    ["What feedback has most improved your work?", "coachability and self-awareness"],
+    ["Tell me about a time you helped another person succeed.", "mentorship and team contribution"],
+    ["How do you handle feedback when you disagree with it at first?", "maturity and openness"],
+  ].map(([question, trait]) => ({
+    question,
+    intention: `The interviewer is evaluating ${trait} for the responsibilities in this job description.`,
+    answer: "Use STAR: describe a specific Situation, your Task, the Actions you personally took, and a concrete Result. Keep the story relevant to this role and include what you learned.",
+  }))
+}
+
+function ensureMinimumQuestions(
+  questions: InterviewQuestion[] | undefined,
+  jobDescription: string,
+  type: "technical" | "behavioral",
+  minimum: number
+) {
+  const existing = (questions ?? []).filter((question) => question.question)
+  const seen = new Set(existing.map((question) => question.question.toLowerCase()))
+  const additions = fallbackQuestions(jobDescription, type).filter((question) => !seen.has(question.question.toLowerCase()))
+
+  return [...existing, ...additions].slice(0, Math.max(minimum, existing.length))
+}
+
 export async function generateInterviewReport({
   resume,
   selfDescription,
@@ -38,7 +104,7 @@ ${selfDescription}
 Job Description:
 ${jobDescription.slice(0, 2000)}
 
-Return this exact JSON structure. IMPORTANT: You must return AT LEAST 10 technical questions and 8 behavioral questions. Make the questions highly specific to the job description's tech stack, responsibilities, and requirements — not generic questions.
+Return this exact JSON structure. IMPORTANT: You must return AT LEAST 12 technical questions and 10 behavioral questions. Make the questions highly specific to the job description's tech stack, responsibilities, and requirements. Every question must include a useful answer guide so the user knows exactly how to answer.
 
 {
   "title": "exact job title from job description",
@@ -103,6 +169,9 @@ Return this exact JSON structure. IMPORTANT: You must return AT LEAST 10 technic
         .trim()
 
       const parsed = JSON.parse(clean)
+      parsed.technicalQuestions = ensureMinimumQuestions(parsed.technicalQuestions, jobDescription, "technical", 12)
+      parsed.behavioralQuestions = ensureMinimumQuestions(parsed.behavioralQuestions, jobDescription, "behavioral", 10)
+
       console.log("✅ Success! Title:", parsed.title)
       console.log("  Technical questions:", parsed.technicalQuestions?.length)
       console.log("  Behavioral questions:", parsed.behavioralQuestions?.length)
