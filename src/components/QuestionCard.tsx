@@ -16,32 +16,39 @@ export default function QuestionCard({ index, question, intention, answer, varia
     : "Answer with a short definition, then walk through a practical example from a project. Mention the tradeoffs, tools, failure modes, and how you would validate the solution in production."
 
   return (
-    <div className="group bg-[#fffefa] border border-[#e4dfd6] rounded-lg shadow-[0_10px_28px_rgba(31,27,20,0.045)] hover:border-[#c6bbab] transition-colors overflow-hidden">
-      <div className="flex items-start gap-3 border-b border-[#f0ede8]"
-        style={{ paddingInline: "1rem", paddingBlock: "1rem" }}
+    <div className="group rounded-xl bg-white border border-[#e3dbcf] shadow-[0_12px_34px_rgba(38,31,22,0.055)] hover:border-[#c6bbab] transition-colors overflow-hidden">
+      <div className="flex items-start gap-3 border-b border-[#eee7dc] bg-white"
+        style={{ padding: "1rem" }}
       >
-        <div className={`w-7 h-7 rounded-md flex items-center justify-center text-[11px] font-semibold flex-shrink-0 ${
+        <div className={`w-8 h-8 rounded-lg border flex items-center justify-center text-[12px] font-semibold flex-shrink-0 ${
           variant === "behavioral"
-            ? "bg-[#fff4dc] text-[#8a5a00]"
-            : "bg-[#e9f4f1] text-[#17624f]"
+            ? "bg-[#fff6e4] border-[#ead8af] text-[#805600]"
+            : "bg-[#eef8f4] border-[#cfe7dc] text-[#173d33]"
         }`}>
           {index}
         </div>
-        <p className="text-[14px] leading-6 font-semibold text-[#171717]">{question}</p>
+        <div className="min-w-0 flex-1">
+          <div className="text-[10px] uppercase tracking-[0.08em] text-[#7b6d5b] font-semibold">
+            {variant === "behavioral" ? "Behavioral question" : "Technical question"}
+          </div>
+          <p className="text-[15px] leading-6 font-semibold text-[#171717]" style={{ marginTop: "0.15rem" }}>
+            {question}
+          </p>
+        </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2"
-        style={{ paddingInline: "1rem", paddingBlock: "1rem" }}
+      <div className="grid gap-3 bg-[#fffefa] sm:grid-cols-2"
+        style={{ padding: "1rem" }}
       >
-        <div className="rounded-md bg-[#faf7f1] border border-[#efe7da]"
-          style={{ padding: "0.85rem" }}
+        <div className="rounded-lg bg-[#faf7f1] border border-[#efe7da]"
+          style={{ padding: "0.9rem" }}
         >
           <div className="text-[10px] text-[#8f826f] uppercase tracking-[0.06em] font-semibold"
             style={{ marginBottom: "0.35rem" }}
           >Why they ask</div>
           <p className="text-[12px] leading-5 text-[#62594d]">{intention || fallbackIntention}</p>
         </div>
-        <div className="rounded-md bg-[#f4fbf8] border border-[#dceee8]"
-          style={{ padding: "0.85rem" }}
+        <div className="rounded-lg bg-[#f4fbf8] border border-[#dceee8]"
+          style={{ padding: "0.9rem" }}
         >
           <div className="text-[10px] text-[#4d7c70] uppercase tracking-[0.06em] font-semibold"
             style={{ marginBottom: "0.35rem" }}
