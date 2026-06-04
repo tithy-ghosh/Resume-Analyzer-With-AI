@@ -1,22 +1,29 @@
 import { GoogleGenAI } from "@google/genai"
+import { logger } from "./logger"
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEMINI_API_KEY!,
 })
 
+const MAX_ATTEMPTS = 5
+
 export interface InterviewReportResult {
   title: string
   matchScore: number
-  technicalQuestions: { question: string; intention: string; answer: string }[]
-  behavioralQuestions: { question: string; intention: string; answer: string }[]
+  technicalQuestions: InterviewQuestion[]
+  behavioralQuestions: InterviewQuestion[]
   skillGaps: { skill: string; severity: "low" | "medium" | "high" }[]
   preparationPlan: { day: number; focus: string; tasks: string[] }[]
 }
 
-type InterviewQuestion = { question: string; intention: string; answer: string }
+type InterviewQuestion = {
+  question: string
+  intention: string
+  answer: string
+}
 
 function fallbackQuestions(jobDescription: string, type: "technical" | "behavioral"): InterviewQuestion[] {
-  const normalized = jobDescription.toLowerCase()
+  const normalizedDescription = jobDescription.toLowerCase()
   const technicalTopics = [
     ["react", "React state, hooks, component boundaries, performance, and accessibility"],
     ["next", "Next.js routing, server/client rendering, caching, and API routes"],
@@ -33,18 +40,18 @@ function fallbackQuestions(jobDescription: string, type: "technical" | "behavior
   ]
 
   if (type === "technical") {
-    const matched = technicalTopics
-      .filter(([keyword]) => normalized.includes(keyword))
+    const matchedTopics = technicalTopics
+      .filter(([keyword]) => normalizedDescription.includes(keyword))
       .map(([, topic]) => topic)
-    const topics = Array.from(new Set([
-      ...matched,
-      ...technicalTopics.map(([, topic]) => topic),
-    ]))
+
+    const topics = Array.from(new Set([...matchedTopics, ...technicalTopics.map(([, topic]) => topic)]))
 
     return topics.map((topic) => ({
       question: `How would you handle ${topic} for this role?`,
-      intention: "The interviewer is testing whether you can translate the job description into practical engineering decisions.",
-      answer: "Start with the business goal and constraints, explain your technical approach, name tradeoffs, and describe how you would test, monitor, and improve the solution. Tie your answer to a real project whenever possible.",
+      intention:
+        "The interviewer is testing whether you can translate the job description into practical engineering decisions.",
+      answer:
+        "Start with the business goal and constraints, explain your technical approach, name tradeoffs, and describe how you would test, monitor, and improve the solution. Tie your answer to a real project whenever possible.",
     }))
   }
 
@@ -62,7 +69,8 @@ function fallbackQuestions(jobDescription: string, type: "technical" | "behavior
   ].map(([question, trait]) => ({
     question,
     intention: `The interviewer is evaluating ${trait} for the responsibilities in this job description.`,
-    answer: "Use STAR: describe a specific Situation, your Task, the Actions you personally took, and a concrete Result. Keep the story relevant to this role and include what you learned.",
+    answer:
+      "Use STAR: describe a specific Situation, your Task, the Actions you personally took, and a concrete Result. Keep the story relevant to this role and include what you learned.",
   }))
 }
 
@@ -72,14 +80,16 @@ function ensureMinimumQuestions(
   type: "technical" | "behavioral",
   minimum: number
 ) {
-  const existing = (questions ?? []).filter((question) => question.question)
-  const seen = new Set(existing.map((question) => question.question.toLowerCase()))
-  const additions = fallbackQuestions(jobDescription, type).filter((question) => !seen.has(question.question.toLowerCase()))
+  const existingQuestions = (questions ?? []).filter((question) => question.question)
+  const seenQuestions = new Set(existingQuestions.map((question) => question.question.toLowerCase()))
+  const additions = fallbackQuestions(jobDescription, type).filter(
+    (question) => !seenQuestions.has(question.question.toLowerCase())
+  )
 
-  return [...existing, ...additions].slice(0, Math.max(minimum, existing.length))
+  return [...existingQuestions, ...additions].slice(0, Math.max(minimum, existingQuestions.length))
 }
 
-export async function generateInterviewReport({
+function buildInterviewReportPrompt({
   resume,
   selfDescription,
   jobDescription,
@@ -87,13 +97,10 @@ export async function generateInterviewReport({
   resume: string
   selfDescription: string
   jobDescription: string
-}): Promise<InterviewReportResult> {
-
-  console.log("🤖 Calling Gemini 2.5 Flash...")
-
-  const prompt = `
+}) {
+  return `
 You are an expert career coach and technical interviewer.
-Analyze this candidate's resume against the job description and return a JSON object ONLY — no explanation, no markdown, just raw JSON.
+Analyze this candidate's resume against the job description and return a JSON object ONLY - no explanation, no markdown, just raw JSON.
 
 Resume:
 ${resume.slice(0, 3000)}
@@ -110,47 +117,35 @@ Return this exact JSON structure. IMPORTANT: You must return AT LEAST 12 technic
   "title": "exact job title from job description",
   "matchScore": 72,
   "technicalQuestions": [
-    { "question": "Specific technical question based on job tech stack", "intention": "What the interviewer is testing for", "answer": "A detailed 3-5 sentence answer guide explaining exactly how to answer this, what to include, what frameworks/concepts to mention, and any red flags to avoid" },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." }
+    { "question": "Specific technical question based on job tech stack", "intention": "What the interviewer is testing for", "answer": "A detailed 3-5 sentence answer guide explaining exactly how to answer this, what to include, what frameworks/concepts to mention, and any red flags to avoid" }
   ],
   "behavioralQuestions": [
-    { "question": "Behavioral question relevant to the role and company type", "intention": "What trait or experience the interviewer is evaluating", "answer": "A detailed STAR-method answer guide: what Situation to describe, what Task to highlight, what Action demonstrates the skill, and what Result to share. Include specific tips for this role." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." },
-    { "question": "...", "intention": "...", "answer": "..." }
+    { "question": "Behavioral question relevant to the role and company type", "intention": "What trait or experience the interviewer is evaluating", "answer": "A detailed STAR-method answer guide with Situation, Task, Action, and Result tips for this role" }
   ],
   "skillGaps": [
-    { "skill": "Specific missing skill from job description not found in resume", "severity": "high" },
-    { "skill": "...", "severity": "medium" },
-    { "skill": "...", "severity": "low" }
+    { "skill": "Specific missing skill from job description not found in resume", "severity": "high" }
   ],
   "preparationPlan": [
-    { "day": 1, "focus": "Day focus area", "tasks": ["Specific actionable task", "Another task", "Third task"] },
-    { "day": 2, "focus": "...", "tasks": ["...", "...", "..."] },
-    { "day": 3, "focus": "...", "tasks": ["...", "...", "..."] },
-    { "day": 4, "focus": "...", "tasks": ["...", "...", "..."] },
-    { "day": 5, "focus": "...", "tasks": ["...", "...", "..."] },
-    { "day": 6, "focus": "...", "tasks": ["...", "...", "..."] },
-    { "day": 7, "focus": "...", "tasks": ["...", "...", "..."] }
+    { "day": 1, "focus": "Day focus area", "tasks": ["Specific actionable task", "Another task", "Third task"] }
   ]
 }
 `
+}
 
-  for (let attempt = 1; attempt <= 5; attempt++) {
+export async function generateInterviewReport({
+  resume,
+  selfDescription,
+  jobDescription,
+}: {
+  resume: string
+  selfDescription: string
+  jobDescription: string
+}): Promise<InterviewReportResult> {
+  const prompt = buildInterviewReportPrompt({ resume, selfDescription, jobDescription })
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
-      console.log(`🤖 Attempt ${attempt}...`)
+      logger.info("Gemini report attempt", { attempt })
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -161,34 +156,43 @@ Return this exact JSON structure. IMPORTANT: You must return AT LEAST 12 technic
       })
 
       const text = response.text ?? ""
-      console.log("🤖 Raw response (first 300 chars):", text.slice(0, 300))
+      logger.info("Gemini raw response preview", { preview: text.slice(0, 300) })
 
-      const clean = text
-        .replace(/```json/g, "")
-        .replace(/```/g, "")
-        .trim()
+      const cleanResponse = text.replace(/```json/g, "").replace(/```/g, "").trim()
+      const parsed = JSON.parse(cleanResponse) as InterviewReportResult
 
-      const parsed = JSON.parse(clean)
-      parsed.technicalQuestions = ensureMinimumQuestions(parsed.technicalQuestions, jobDescription, "technical", 12)
-      parsed.behavioralQuestions = ensureMinimumQuestions(parsed.behavioralQuestions, jobDescription, "behavioral", 10)
+      parsed.technicalQuestions = ensureMinimumQuestions(
+        parsed.technicalQuestions,
+        jobDescription,
+        "technical",
+        12
+      )
+      parsed.behavioralQuestions = ensureMinimumQuestions(
+        parsed.behavioralQuestions,
+        jobDescription,
+        "behavioral",
+        10
+      )
 
-      console.log("✅ Success! Title:", parsed.title)
-      console.log("  Technical questions:", parsed.technicalQuestions?.length)
-      console.log("  Behavioral questions:", parsed.behavioralQuestions?.length)
+      logger.info("Gemini report generated", {
+        title: parsed.title,
+        technicalQuestions: parsed.technicalQuestions?.length,
+        behavioralQuestions: parsed.behavioralQuestions?.length,
+      })
 
       return parsed
+    } catch (error: unknown) {
+      const geminiError = error as { status?: number }
+      logger.warn("Gemini report attempt failed", { attempt, status: geminiError?.status })
 
-    } catch (err: unknown) {
-      const e = err as { status?: number; message?: string }
-      console.log(`⚠️ Attempt ${attempt} failed:`, e?.status)
-
-      if (e?.status === 503 && attempt < 5) {
+      if (geminiError?.status === 503 && attempt < MAX_ATTEMPTS) {
         const wait = attempt * 4000
-        console.log(`⏳ Waiting ${wait / 1000}s before retry...`)
-        await new Promise(res => setTimeout(res, wait))
-      } else {
-        throw err
+        logger.info("Waiting before Gemini retry", { seconds: wait / 1000 })
+        await new Promise((resolve) => setTimeout(resolve, wait))
+        continue
       }
+
+      throw error
     }
   }
 

@@ -1,0 +1,23 @@
+.layout {
+  background: #f5f3ef;
+  display: flex;
+  font-family: Geist, sans-serif;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+  overflow: auto;
+  padding: 1.75rem 2rem;
+}
+
+@media (max-width: 760px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .main {
+    overflow: visible;
+    padding: 1rem;
+  }
+}

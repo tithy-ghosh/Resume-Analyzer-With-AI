@@ -1,0 +1,172 @@
+.sidebar {
+  background: #fafaf9;
+  border-right: 1px solid #e8e6e1;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 0.25rem;
+  padding: 1.5rem 1rem;
+  width: 200px;
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-inline: 1rem;
+}
+
+.brandDot {
+  background: #1a1a1a;
+  border-radius: 999px;
+  height: 8px;
+  width: 8px;
+}
+
+.brandText {
+  color: #1a1a1a;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.menuButton {
+  display: none;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.navLink {
+  align-items: center;
+  border-radius: 8px;
+  color: #999;
+  display: flex;
+  font-size: 12px;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  text-decoration: none;
+  transition: background 0.18s, color 0.18s;
+}
+
+.navLink:hover {
+  background: #f0ede8;
+  color: #1a1a1a;
+}
+
+.activeLink {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.footer {
+  border-top: 1px solid #e8e6e1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.user {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.avatar {
+  align-items: center;
+  background: #e8e6e1;
+  border-radius: 999px;
+  color: #666;
+  display: flex;
+  font-size: 10px;
+  font-weight: 500;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.username {
+  color: #999;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .sidebar {
+    align-items: center;
+    border-bottom: 1px solid #e8e6e1;
+    border-right: 0;
+    flex-direction: row;
+    gap: 0.35rem;
+    justify-content: space-between;
+    overflow: visible;
+    padding: 0.75rem;
+    position: relative;
+    width: 100%;
+    z-index: 30;
+  }
+
+  .brand {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    padding-inline: 0.5rem;
+  }
+
+  .menuButton {
+    align-items: center;
+    background: #1a1a1a;
+    border: 1px solid #1a1a1a;
+    border-radius: 10px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 4px;
+    height: 38px;
+    justify-content: center;
+    padding: 0;
+    width: 42px;
+  }
+
+  .menuButton span {
+    background: #fff;
+    border-radius: 999px;
+    display: block;
+    height: 2px;
+    width: 16px;
+  }
+
+  .nav {
+    background: #fff;
+    border: 1px solid #e8e6e1;
+    border-radius: 12px;
+    box-shadow: 0 18px 40px rgba(17, 17, 17, 0.12);
+    display: none;
+    gap: 0.35rem;
+    left: 0.75rem;
+    padding: 0.5rem;
+    position: absolute;
+    right: 0.75rem;
+    top: calc(100% + 0.5rem);
+  }
+
+  .openNav {
+    display: flex;
+  }
+
+  .navLink {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .footer {
+    display: none;
+  }
+}

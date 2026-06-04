@@ -1,0 +1,170 @@
+.header {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  gap: 1rem;
+}
+
+.header h1 {
+  color: #1a1a1a;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.header em {
+  color: #999;
+  font-style: italic;
+}
+
+.header p {
+  color: #9ca3af;
+  font-size: 11px;
+  margin: 0.25rem 0 0;
+}
+
+.primaryAction {
+  align-items: center;
+  background: #1a1a1a;
+  border-radius: 9px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 500;
+  gap: 0.5rem;
+  min-height: 34px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: opacity 0.18s;
+  white-space: nowrap;
+}
+
+.primaryAction:hover {
+  opacity: 0.9;
+}
+
+.statsGrid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 1.75rem;
+}
+
+.statCard {
+  background: #fff;
+  border: 1px solid #e8e6e1;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.statLabel {
+  color: #aaa;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.statValue {
+  color: #1a1a1a;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.statSub {
+  color: #bbb;
+  font-size: 10px;
+  margin-top: 0.25rem;
+}
+
+.emptyState {
+  background: #fff;
+  border: 1px dashed #e4e1db;
+  border-radius: 12px;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.emptyState p {
+  color: #bbb;
+  font-size: 14px;
+  margin: 0 0 1rem;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reportRow {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e8e6e1;
+  border-radius: 12px;
+  color: inherit;
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  transition: border-color 0.18s;
+}
+
+.reportRow:hover {
+  border-color: #1a1a1a;
+}
+
+.reportMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.reportTitle {
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reportDate {
+  color: #bbb;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.reportArrow {
+  color: #ccc;
+  font-size: 18px;
+  transition: color 0.18s;
+}
+
+.reportRow:hover .reportArrow {
+  color: #1a1a1a;
+}
+
+@media (max-width: 760px) {
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primaryAction {
+    justify-content: center;
+  }
+
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .reportRow {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}

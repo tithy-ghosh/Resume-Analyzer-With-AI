@@ -1,8 +1,11 @@
 import { GoogleGenAI } from "@google/genai"
+import { logger } from "./logger"
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GOOGLE_GEMINI_API_KEY!,
 })
+
+const MAX_ATTEMPTS = 3
 
 export async function generateATSResume({
   resume,
@@ -13,9 +16,6 @@ export async function generateATSResume({
   jobDescription: string
   title: string
 }): Promise<string> {
-
-  console.log("📄 Generating ATS resume...")
-
   const prompt = `
 You are an expert resume writer specializing in ATS (Applicant Tracking System) optimization.
 
@@ -29,7 +29,7 @@ Job Description:
 ${jobDescription.slice(0, 2000)}
 
 Rules:
-- Keep all real experience and facts from the original resume — do NOT invent anything
+- Keep all real experience and facts from the original resume - do NOT invent anything
 - Reorder and reword bullet points to match job description keywords
 - Use action verbs and quantifiable achievements where possible
 - Add relevant keywords from the job description naturally
@@ -41,9 +41,9 @@ Rules:
 Return ONLY the rewritten resume text. No explanations, no markdown, just the plain text resume.
 `
 
-  for (let attempt = 1; attempt <= 3; attempt++) {
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     try {
-      console.log(`📄 ATS attempt ${attempt}...`)
+      logger.info("ATS resume attempt", { attempt })
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash",
@@ -51,18 +51,18 @@ Return ONLY the rewritten resume text. No explanations, no markdown, just the pl
       })
 
       const text = response.text ?? ""
-      console.log("✅ ATS resume generated, length:", text.length)
+      logger.info("ATS resume generated", { length: text.length })
       return text
+    } catch (error: unknown) {
+      const geminiError = error as { status?: number }
+      logger.warn("ATS resume attempt failed", { attempt, status: geminiError?.status })
 
-    } catch (err: unknown) {
-      const e = err as { status?: number }
-      console.log(`⚠️ ATS attempt ${attempt} failed:`, e?.status)
-
-      if (e?.status === 503 && attempt < 3) {
-        await new Promise(res => setTimeout(res, attempt * 4000))
-      } else {
-        throw err
+      if (geminiError?.status === 503 && attempt < MAX_ATTEMPTS) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 4000))
+        continue
       }
+
+      throw error
     }
   }
 

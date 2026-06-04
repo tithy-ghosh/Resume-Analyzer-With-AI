@@ -1,0 +1,60 @@
+.ring {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.ringXs {
+  height: 18px;
+  width: 18px;
+}
+
+.ringSm {
+  height: 40px;
+  width: 40px;
+}
+
+.ringMd {
+  height: 44px;
+  width: 44px;
+}
+
+.ringTitle {
+  height: 60px;
+  width: 60px;
+}
+
+.ringLg {
+  height: 64px;
+  width: 64px;
+}
+
+.svg {
+  height: 100%;
+  width: 100%;
+}
+
+.label {
+  align-items: center;
+  color: #1a1a1a;
+  display: flex;
+  font-weight: 500;
+  inset: 0;
+  justify-content: center;
+  position: absolute;
+}
+
+.sm {
+  font-size: 9px;
+}
+
+.md {
+  font-size: 10px;
+}
+
+.title {
+  font-size: 13px;
+}
+
+.lg {
+  font-size: 14px;
+}

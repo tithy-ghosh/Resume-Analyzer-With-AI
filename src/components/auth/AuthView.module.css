@@ -1,0 +1,280 @@
+.shell {
+  align-items: center;
+  display: flex;
+  font-family: Geist, sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.card {
+  background: #fafaf9;
+  border: 1px solid #e8e6e1;
+  border-radius: 16px;
+  max-width: 500px;
+  padding: 44px 40px;
+  position: relative;
+  width: 100%;
+}
+
+.cornerTop,
+.cornerBottom {
+  height: 24px;
+  position: absolute;
+  width: 24px;
+}
+
+.cornerTop {
+  border-right: 1.5px solid #d4d0c8;
+  border-top: 1.5px solid #d4d0c8;
+  border-top-right-radius: 6px;
+  right: 18px;
+  top: 18px;
+}
+
+.cornerBottom {
+  border-bottom: 1.5px solid #d4d0c8;
+  border-bottom-left-radius: 6px;
+  border-left: 1.5px solid #d4d0c8;
+  bottom: 18px;
+  left: 18px;
+}
+
+.brand {
+  align-items: center;
+  color: #1a1a1a;
+  display: flex;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 0.5rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 25px;
+}
+
+.brandDot {
+  background: #1a1a1a;
+  border-radius: 999px;
+  height: 8px;
+  width: 8px;
+}
+
+.tag {
+  background: #f0ede8;
+  border-radius: 4px;
+  color: #888;
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+  padding: 6px 8px;
+}
+
+.heading {
+  color: #1a1a1a;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.05;
+  margin: 0 0 4px;
+}
+
+.heading em {
+  color: #999;
+  font-style: italic;
+}
+
+.intro {
+  color: #999;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  margin: 0 0 20px;
+}
+
+.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  color: #b91c1c;
+  font-size: 14px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.field label {
+  color: #aaa;
+  font-size: 11px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.field input {
+  background: #fff;
+  border: 1px solid #e4e1db;
+  border-radius: 10px;
+  color: #1a1a1a;
+  font-size: 14px;
+  outline: none;
+  padding: 8px 14px;
+  transition: border-color 0.18s;
+  width: 100%;
+}
+
+.field input::placeholder {
+  color: #c4c0b8;
+}
+
+.field input:focus {
+  border-color: #1a1a1a;
+}
+
+.submit {
+  align-items: center;
+  background: #1a1a1a;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: center;
+  margin: 4px auto 0;
+  padding: 8px 14px;
+  transition: opacity 0.18s, transform 0.18s;
+  width: 50%;
+}
+
+.submit:hover {
+  opacity: 0.9;
+}
+
+.submit:active {
+  transform: scale(0.99);
+}
+
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.footerText {
+  color: #bbb;
+  font-size: 12px;
+  margin: 15px 0 0;
+  text-align: center;
+}
+
+.footerText a {
+  color: #1a1a1a;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footerText a:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  align-items: center;
+  display: flex;
+  gap: 0.75rem;
+  margin: 12px 0;
+}
+
+.divider::before,
+.divider::after {
+  background: #ece9e3;
+  content: "";
+  flex: 1;
+  height: 1px;
+}
+
+.divider span {
+  color: #ccc;
+  font-size: 11px;
+}
+
+.stepNumbers {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 15px;
+}
+
+.stepNumbers span {
+  color: #bbb;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.stepNumbers span:first-child {
+  color: #1a1a1a;
+}
+
+.stepLine {
+  background: #e8e6e1;
+  flex: 1;
+  height: 1px;
+}
+
+.progressDots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.progressDot,
+.progressDotActive {
+  border-radius: 999px;
+  height: 6px;
+}
+
+.progressDot {
+  background: #e4e1db;
+  width: 6px;
+}
+
+.progressDotActive {
+  background: #1a1a1a;
+  width: 18px;
+}
+
+.progressTrack {
+  background: #e8e6e1;
+  border-radius: 999px;
+  height: 2px;
+  margin-bottom: 15px;
+  overflow: hidden;
+}
+
+.progressFill {
+  background: #1a1a1a;
+  border-radius: inherit;
+  height: 100%;
+  width: 33%;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 36px 24px;
+  }
+
+  .submit {
+    width: 100%;
+  }
+}

@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server"
 import { auth } from "../../../../auth"
 import dbConnect from "@/lib/db"
-import InterviewReportModel from "@/models/InterviewReport"
 import { generateInterviewReport } from "@/lib/ai"
+import { logger } from "@/lib/logger"
+import InterviewReportModel from "@/models/InterviewReport"
 import PDFParser from "pdf2json"
 
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
@@ -11,7 +12,7 @@ async function extractTextFromPDF(buffer: Buffer): Promise<string> {
 
     parser.on("pdfParser_dataReady", (data) => {
       const text = data.Pages.flatMap((page) =>
-        page.Texts.map((t) => decodeURIComponent(t.R[0].T))
+        page.Texts.map((item) => decodeURIComponent(item.R[0].T))
       ).join(" ")
       resolve(text)
     })
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     const buffer = Buffer.from(arrayBuffer)
     const resumeText = await extractTextFromPDF(buffer)
 
-    console.log("📄 PDF extracted, length:", resumeText.length)
+    logger.info("PDF extracted", { length: resumeText.length })
 
     if (!resumeText.trim()) {
       return NextResponse.json(
@@ -60,15 +61,14 @@ export async function POST(request: Request) {
       )
     }
 
-    console.log("🤖 Calling AI...")
     const aiReport = await generateInterviewReport({
       resume: resumeText,
       selfDescription,
       jobDescription,
     })
-    console.log("✅ AI done, title:", aiReport.title)
 
-    console.log("💾 Saving to DB...")
+    logger.info("Saving interview report", { title: aiReport.title })
+
     await dbConnect()
     const report = await InterviewReportModel.create({
       user: session.user.id,
@@ -82,15 +82,15 @@ export async function POST(request: Request) {
       skillGaps: aiReport.skillGaps,
       preparationPlan: aiReport.preparationPlan,
     })
-    console.log("✅ Saved, reportId:", report._id.toString())
+
+    logger.info("Interview report saved", { reportId: report._id.toString() })
 
     return NextResponse.json({
       message: "Report generated successfully",
       reportId: report._id.toString(),
     }, { status: 201 })
-
   } catch (error) {
-    console.error("❌ Analyze error:", error)
+    logger.error("Analyze route failed", error)
     return NextResponse.json(
       { message: "Failed to generate report. Please try again." },
       { status: 500 }

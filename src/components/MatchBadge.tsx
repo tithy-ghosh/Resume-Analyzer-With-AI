@@ -1,3 +1,5 @@
+import styles from "./MatchBadge.module.css"
+
 interface MatchBadgeProps {
   score: number
 }
@@ -5,18 +7,13 @@ interface MatchBadgeProps {
 export default function MatchBadge({ score }: MatchBadgeProps) {
   const badge =
     score >= 75
-      ? { label: "High match", className: "bg-green-50 text-green-800" }
+      ? { label: "High match", className: styles.high }
       : score >= 50
-      ? { label: "Medium match", className: "bg-yellow-50 text-yellow-800" }
-      : { label: "Low match", className: "bg-red-50 text-red-800" }
+      ? { label: "Medium match", className: styles.medium }
+      : { label: "Low match", className: styles.low }
 
   return (
-    <span className={`text-[9px] font-medium px-2 py-1 rounded ${badge.className}`}
-    style={{ 
-        "paddingInline":"0.5rem",
-        "paddingBlock": "0.25rem",
-      }}
-    >
+    <span className={`${styles.badge} ${badge.className}`}>
       {badge.label}
     </span>
   )

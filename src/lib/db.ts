@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { logger } from "./logger"
 
 type ConnectionObject = {
     isConnected?: number
@@ -18,9 +19,9 @@ async function dbConnect(): Promise<void> {
     try {
        const db = await mongoose.connect(process.env.MONGODB_URI)
        connection.isConnected = db.connections[0].readyState
-       console.log("Database connected")
+       logger.info("Database connected")
     } catch (error) {
-       console.error("Database connection failed", error)
+       logger.error("Database connection failed", error)
        
        throw new Error("Failed to connect database")
     }

@@ -1,5 +1,9 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import LogoutButton from "./LogoutButton"
+import styles from "./Sidebar.module.css"
 
 interface SidebarProps {
   active?: "dashboard" | "reports" | "analyze"
@@ -7,6 +11,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ active, username }: SidebarProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
+
   const links = [
     {
       key: "dashboard",
@@ -44,65 +50,47 @@ export default function Sidebar({ active, username }: SidebarProps) {
   ]
 
   return (
-    <aside className="w-[200px] bg-[#fafaf9] border-r border-[#e8e6e1] flex flex-col gap-1 flex-shrink-0"
-    style={{ 
-        "paddingInline":"1rem",
-        "paddingBlock": "1.5rem",
-      }}
-    >
-
-      {/* Brand */}
-      <div className="flex items-center gap-2"
-      style={{ 
-        "paddingInline":"1rem",
-        "marginBottom": "1rem",
-      }}
-      >
-        <div className="w-2 h-2 rounded-full bg-[#1a1a1a]" />
-        <span className="text-xs font-medium text-[#1a1a1a] tracking-[0.04em]">
+    <aside className={styles.sidebar}>
+      <div className={styles.brand}>
+        <div className={styles.brandDot} />
+        <span className={styles.brandText}>
           rezume.ai
         </span>
       </div>
 
-      {/* Nav links */}
-      {links.map((link) => (
-        <Link
-          key={link.key}
-          href={link.href}
-          className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs transition-colors ${
-            active === link.key
-              ? "bg-[#1a1a1a] text-white"
-              : "text-[#999] hover:bg-[#f0ede8] hover:text-[#1a1a1a]"
-          }`}
+      <button
+        type="button"
+        className={styles.menuButton}
+        aria-expanded={menuOpen}
+        aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        <span />
+        <span />
+        <span />
+      </button>
 
-          style={{ 
-           "paddingInline":"0.75rem",
-          "paddingBlock": "0.5rem",
-        }}
-        >
-          {link.icon}
-          {link.label}
-        </Link>
-      ))}
-
-      {/* Footer */}
-      {username && (
-        <div className=" border-t border-[#e8e6e1] flex flex-col gap-1"
-        style={{ 
-        "paddingTop":"1rem",
-        "marginTop": "auto",
-        }}
-        >
-          <div className="flex items-center gap-2"
-          style={{ 
-           "paddingInline":"0.5rem",
-           "paddingBlock": "0.5rem",
-          }}
+      <nav className={`${styles.nav} ${menuOpen ? styles.openNav : ""}`}>
+        {links.map((link) => (
+          <Link
+            key={link.key}
+            href={link.href}
+            onClick={() => setMenuOpen(false)}
+            className={`${styles.navLink} ${active === link.key ? styles.activeLink : ""}`}
           >
-            <div className="w-7 h-7 rounded-full bg-[#e8e6e1] flex items-center justify-center text-[10px] font-medium text-[#666]">
+            {link.icon}
+            {link.label}
+          </Link>
+        ))}
+      </nav>
+
+      {username && (
+        <div className={styles.footer}>
+          <div className={styles.user}>
+            <div className={styles.avatar}>
               {username[0]?.toUpperCase()}
             </div>
-            <span className="text-xs text-[#999] truncate">{username}</span>
+            <span className={styles.username}>{username}</span>
           </div>
           <LogoutButton />
         </div>

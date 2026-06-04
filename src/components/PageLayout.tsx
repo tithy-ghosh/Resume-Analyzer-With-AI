@@ -1,4 +1,5 @@
 import Sidebar from "./Sidebar"
+import styles from "./PageLayout.module.css"
 
 interface PageLayoutProps {
   active?: "dashboard" | "reports" | "analyze"
@@ -8,14 +9,9 @@ interface PageLayoutProps {
 
 export default function PageLayout({ active, username, children }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#f5f3ef] flex font-[Geist]">
+    <div className={styles.layout}>
       <Sidebar active={active} username={username} />
-      <main className="flex-1  overflow-auto"
-      style={{
-        "paddingInline": "2rem",
-        "paddingBlock": "1.75rem"
-      }}
-      >
+      <main className={styles.main}>
         {children}
       </main>
     </div>

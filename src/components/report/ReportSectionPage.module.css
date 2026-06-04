@@ -1,0 +1,410 @@
+.pageShell {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 1.75rem 2rem;
+}
+
+.behavioralShell {
+  min-height: 100vh;
+  background: #f5f3ef;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  color: #999999;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.header {
+  margin-bottom: 1.75rem;
+}
+
+.sectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.marker {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+}
+
+.technicalMarker {
+  background: #2563eb;
+}
+
+.behavioralMarker {
+  background: #d97706;
+}
+
+.preparationMarker {
+  background: #7c3aed;
+}
+
+.eyebrow,
+.count {
+  color: #aaaaaa;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0 0 0.5rem;
+  color: #1a1a1a;
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.titleEmphasis {
+  color: #999999;
+  font-style: italic;
+}
+
+.intro {
+  margin: 0;
+  color: #bbbbbb;
+  font-size: 12px;
+}
+
+.separator {
+  height: 1.5px;
+  margin-top: 1.25rem;
+  background: #f0ede8;
+}
+
+.countRow {
+  margin-bottom: 0.75rem;
+}
+
+.questionList,
+.dayList {
+  display: flex;
+  flex-direction: column;
+}
+
+.questionList {
+  gap: 0.5rem;
+}
+
+.dayList {
+  gap: 0.75rem;
+}
+
+.questionCard {
+  overflow: hidden;
+  border: 1.5px solid #e8e6e1;
+  border-radius: 14px;
+  background: #ffffff;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.questionCardOpen {
+  border-color: #1a1a1a;
+  background: #fafaf9;
+}
+
+.questionButton {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+
+.questionIndex {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-top: 2px;
+  border-radius: 8px;
+  font-family: "Geist Mono", monospace;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.18s, color 0.18s;
+}
+
+.technicalIndex {
+  background: #f0ede8;
+  color: #999999;
+}
+
+.behavioralIndex {
+  background: #fff8ed;
+  color: #b07c00;
+}
+
+.questionCardOpen .questionIndex {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.questionText {
+  flex: 1;
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.chevron {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  border: 1.5px solid #e8e6e1;
+  border-radius: 6px;
+  color: #999999;
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.2s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.detailGrid,
+.behavioralDetails {
+  gap: 0.75rem;
+  padding: 0 1.25rem 1.25rem;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.behavioralDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailPanel {
+  border: 1.5px solid #e8e6e1;
+  border-radius: 10px;
+  background: #f5f3ef;
+  padding: 0.875rem;
+}
+
+.answerPanel {
+  border-color: #d1fae5;
+  background: #f0fdf6;
+}
+
+.starPanel {
+  border-color: #fde68a;
+  background: #fffbf0;
+}
+
+.tipPanel {
+  background: #fafaf9;
+}
+
+.panelTitle {
+  margin-bottom: 0.4rem;
+  color: #999999;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.answerPanel .panelTitle {
+  color: #5a9e7a;
+}
+
+.starPanel .panelTitle {
+  color: #a16207;
+}
+
+.panelCopy {
+  margin: 0;
+  color: #555555;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.answerPanel .panelCopy {
+  color: #385c47;
+}
+
+.starPanel .panelCopy {
+  color: #3a2500;
+  font-size: 13px;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #a16207;
+  font-size: 12px;
+}
+
+.spinner {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #a16207;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 0.7s linear infinite;
+}
+
+.emptyState {
+  border: 1.5px dashed #e8e6e1;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.emptyTitle,
+.emptyCopy {
+  margin: 0;
+}
+
+.emptyTitle {
+  margin-bottom: 0.5rem;
+  color: #bbbbbb;
+  font-size: 13px;
+}
+
+.emptyCopy {
+  color: #cccccc;
+  font-size: 11px;
+}
+
+.dayCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 1.1rem 1.25rem;
+}
+
+.dayNumber {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #111111;
+  color: #ffffff;
+  font-family: "Geist Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.dayContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.dayTitle {
+  margin: 0 0 0.75rem;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.taskItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #4b5563;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.taskMarker {
+  flex-shrink: 0;
+  color: #7c3aed;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.fallbackCopy {
+  margin: 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.emptyPlan {
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 1.25rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .pageShell {
+    padding: 1rem;
+  }
+
+  .detailGrid {
+    grid-template-columns: 1fr;
+    padding: 0 1rem 1rem;
+  }
+
+  .behavioralDetails {
+    padding: 0 1rem 1rem;
+  }
+
+  .dayCard {
+    border-radius: 12px;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .dayCard {
+    flex-direction: column;
+  }
+}

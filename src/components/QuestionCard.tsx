@@ -1,3 +1,5 @@
+import styles from "./Question.module.css"
+
 interface QuestionCardProps {
   index: number
   question: string
@@ -16,44 +18,28 @@ export default function QuestionCard({ index, question, intention, answer, varia
     : "Answer with a short definition, then walk through a practical example from a project. Mention the tradeoffs, tools, failure modes, and how you would validate the solution in production."
 
   return (
-    <div className="group rounded-xl bg-white border border-[#e3dbcf] shadow-[0_12px_34px_rgba(38,31,22,0.055)] hover:border-[#c6bbab] transition-colors overflow-hidden">
-      <div className="flex items-start gap-3 border-b border-[#eee7dc] bg-white"
-        style={{ padding: "1rem" }}
-      >
-        <div className={`w-8 h-8 rounded-lg border flex items-center justify-center text-[12px] font-semibold flex-shrink-0 ${
-          variant === "behavioral"
-            ? "bg-[#fff6e4] border-[#ead8af] text-[#805600]"
-            : "bg-[#eef8f4] border-[#cfe7dc] text-[#173d33]"
-        }`}>
+    <div className={styles.card}>
+      <div className={styles.header}>
+        <div className={`${styles.number} ${variant === "behavioral" ? styles.behavioralNumber : styles.technicalNumber}`}>
           {index}
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="text-[10px] uppercase tracking-[0.08em] text-[#7b6d5b] font-semibold">
+        <div className={styles.questionMeta}>
+          <div className={styles.eyebrow}>
             {variant === "behavioral" ? "Behavioral question" : "Technical question"}
           </div>
-          <p className="text-[15px] leading-6 font-semibold text-[#171717]" style={{ marginTop: "0.15rem" }}>
+          <p className={styles.questionTitle}>
             {question}
           </p>
         </div>
       </div>
-      <div className="grid gap-3 bg-[#fffefa] sm:grid-cols-2"
-        style={{ padding: "1rem" }}
-      >
-        <div className="rounded-lg bg-[#faf7f1] border border-[#efe7da]"
-          style={{ padding: "0.9rem" }}
-        >
-          <div className="text-[10px] text-[#8f826f] uppercase tracking-[0.06em] font-semibold"
-            style={{ marginBottom: "0.35rem" }}
-          >Why they ask</div>
-          <p className="text-[12px] leading-5 text-[#62594d]">{intention || fallbackIntention}</p>
+      <div className={styles.detailGrid}>
+        <div className={`${styles.detailPanel} ${styles.intentPanel}`}>
+          <div className={styles.panelTitle}>Why they ask</div>
+          <p className={styles.panelCopy}>{intention || fallbackIntention}</p>
         </div>
-        <div className="rounded-lg bg-[#f4fbf8] border border-[#dceee8]"
-          style={{ padding: "0.9rem" }}
-        >
-          <div className="text-[10px] text-[#4d7c70] uppercase tracking-[0.06em] font-semibold"
-            style={{ marginBottom: "0.35rem" }}
-          >How to answer</div>
-          <p className="text-[12px] leading-5 text-[#465d56]">{answer || fallbackAnswer}</p>
+        <div className={`${styles.detailPanel} ${styles.answerPanel}`}>
+          <div className={styles.panelTitle}>How to answer</div>
+          <p className={styles.panelCopy}>{answer || fallbackAnswer}</p>
         </div>
       </div>
     </div>
